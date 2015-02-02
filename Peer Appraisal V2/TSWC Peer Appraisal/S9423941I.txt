@@ -1,0 +1,17 @@
+Leadership|S1234567A|1
+Leadership|S1234567B|1
+Responsibility|S1234567A|1
+Responsibility|S1234567B|1
+Determination|S1234567A|1
+Determination|S1234567B|1
+Attitude|S1234567A|1
+Attitude|S1234567B|1
+Teamwork|S1234567A|1
+Teamwork|S1234567B|1
+Strengths|S1234567A|tests
+Strengths|S1234567B|sete
+Weaknesses|S1234567A|setse
+Weaknesses|S1234567B|setset
+Top Student|H
+First Runner Up|G
+Second Runner Up|J

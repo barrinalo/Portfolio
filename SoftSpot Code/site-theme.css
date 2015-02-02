@@ -1,0 +1,132 @@
+* {
+	margin: 0;
+}
+
+html, body {
+	background-color: #FCE3FC;
+	font-family: 'Courgette', cursive;
+	color: #FF9100;
+	text-align: center;
+	height: 100%;
+	width: 100%;
+}
+
+#container {
+	top: 0;
+	left: 0;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	
+}
+
+h1 {
+	font-size: 2vw;
+}
+a:link {
+	color: #FF9100;
+	text-decoration: none;
+}
+
+a:visited {
+	color: #FF9100;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #F7BF57;
+	text-decoration: none;
+}
+
+.checkout {
+	border-collapse: collapse;
+	border: 2.5px solid #FCE3FC;
+	text-align: center;
+}
+
+.formbutton {
+	font-size: 1.25vw;
+	font-family: 'Courgette', cursive;
+	color: #FF9100;
+	background-color: #FCE3FC;
+	border: none;
+	cursor: pointer;
+}
+.formtextbox, .deleteprice, .pricecalculation {
+	font-size: 1.25vw;
+	font-family: 'Courgette', cursive;
+	color: #FF9100;
+	background-color: #FCE3FC;
+	border: none;
+	cursor: grab;
+}
+
+.errmsg {
+	font-size: 1vw;
+	font-family: 'Courgette', cursive;
+	color: red;
+}
+
+#adminlogin {
+	background-color: #F7CAFC;
+	width: 50vw;
+	padding: 2vw;
+}
+
+#header {
+	position: fixed;
+	top: 0;
+	right: 0;
+	text-align: right;
+	padding-left: 1vw;
+	padding-right: 1vw;
+	padding-top: 1vh;
+	padding-bottom:1vh;
+	font-size: 1.5vw;
+	height: 4vh;
+	width: 100vw;
+	background-color: #F7CAFC;
+}
+
+#main {
+	padding-top: 7.5vh;
+	padding-bottom: 2.5vh;
+	text-align: center;
+	font-size: 1.5vw;
+}
+
+#Announcements {
+	text-align: left;
+	margin-left: 12.5vw;
+	width: 73vw;
+	min-height: 25vh;
+	background-color: #F7CAFC;
+	padding: 1vw;
+}
+
+#Products {
+	float: left;
+	margin-left: 12.5vw;
+	margin-top: 1vh;
+	margin-bottom: 1vh;
+	width: 37.25vw;
+	min-height: 25vh;
+	background-color: #F7CAFC;
+}
+
+#About {
+	margin-left: 50.25vw;
+	margin-top: 1vh;
+	width: 37.25vw;
+	min-height: 25vh;
+	background-color: #F7CAFC;
+}
+
+#Orders {
+	text-align: left;
+	margin-left: 12.5vw;
+	width: 73vw;
+	min-height: 25vh;
+	background-color: #F7CAFC;
+	padding: 1vw;
+}

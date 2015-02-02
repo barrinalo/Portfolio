@@ -1,0 +1,17 @@
+Leadership|S9423941I|1
+Leadership|S1234567A|1
+Responsibility|S9423941I|3
+Responsibility|S1234567A|2
+Determination|S9423941I|2
+Determination|S1234567A|1
+Attitude|S9423941I|1
+Attitude|S1234567A|1
+Teamwork|S9423941I|1
+Teamwork|S1234567A|2
+Strengths|S9423941I|omgomgomg
+Strengths|S1234567A|omgomgomg
+Weaknesses|S9423941I|omgomg
+Weaknesses|S1234567A|omg
+Top Student|F
+First Runner Up|I
+Second Runner Up|J
