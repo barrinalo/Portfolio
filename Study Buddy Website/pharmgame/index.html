@@ -1,0 +1,228 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>MODA</title>
+        <script src="phaser.min.js"></script>
+    </head>
+    <body bgcolor='black'>
+    <script type="text/javascript">
+    window.onload = function() {
+        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update : update });
+				var drugdatabase = [
+						{Drug : "Atropine", Antidotes : "Acetylcholine,Muscarine", DeathText : "Death from arrhythmia"},
+						{Drug : "Acetylcholine", Antidotes : "Atropine,D-Tubocurarine", DeathText : "Death from "},
+						{Drug : "Muscarine", Antidotes : "Atropine", DeathText : "Death from "},
+						{Drug : "Benzilylcholine Mustard", Antidotes : "mAchR", DeathText : ""},
+						{Drug : "D-Tubocurarine", Antidotes : "Nicotine,Acetylcholine", DeathText : ""},
+						{Drug : "Nicotine", Antidotes : "D-Tubocurarine,Acetylcholine", DeathText : ""},
+						{Drug : "Noradrenaline", Antidotes : "Propanolol,Prazosin", DeathText : ""},
+						{Drug : "Adrenaline", Antidotes : "Propanolol,Prazosin", DeathText : ""},
+						{Drug : "Propanolol", Antidotes : "Adrenaline,Noradrenaline", DeathText : ""},
+						{Drug : "Prazosin", Antidotes : "Adrenaline,Noradrenaline", DeathText : ""},
+						{Drug : "Cortisol", Antidotes : "Mifepristone", DeathText : ""},
+						{Drug : "Prednisolone", Antidotes : "Mifepristone", DeathText : ""},
+						{Drug : "Mifepristone", Antidotes : "Cortisol,Prednisolone", DeathText : ""},
+						{Drug : "Aldosterone", Antidotes : "Spironolactone", DeathText : ""},
+						{Drug : "Fludrocortisone", Antidotes : "Spironolactone", DeathText : ""},
+						{Drug : "Spironolactone", Antidotes : "Fludrocortisone,Aldosterone", DeathText : ""},
+						{Drug : "Estradiol", Antidotes : "Tamoxifen", DeathText : ""},
+						{Drug : "Ethinylestradiol", Antidotes : "Tamoxifen", DeathText : ""},
+						{Drug : "Tamoxifen", Antidotes : "Ethinylestradiol,Estradiol", DeathText : ""},
+						{Drug : "Progesterone", Antidotes : "Danazol", DeathText : ""},
+						{Drug : "Norethisterone", Antidotes : "Danazol", DeathText : ""},
+						{Drug : "Danazol", Antidotes : "Progesterone,Norethisterone", DeathText : ""},
+						{Drug : "Tolbutamide", Antidotes : "Diazoxide,Minoxidil,Nicorandil", DeathText : ""},
+						{Drug : "Glibenclamide", Antidotes : "Diazoxide,Minoxidil,Nicorandil", DeathText : ""},
+						{Drug : "Diazoxide", Antidotes : "Tolbutamide,Glibenclamide", DeathText : ""},
+						{Drug : "Nicorandil", Antidotes : "Tolbutamide,Glibenclamide", DeathText : ""},
+						{Drug : "Minoxidil", Antidotes : "Tolbutamide,Glibenclamide", DeathText : ""},
+						{Drug : "Bay K 8644", Antidotes : "Nifedipine,Verapamil,Diltiazem", DeathText : ""},
+						{Drug : "Nifedipine", Antidotes : "Bay K 8644", DeathText : ""},
+						{Drug : "Verapamil", Antidotes : "Bay K 8644", DeathText : ""},
+						{Drug : "Diltiazem", Antidotes : "Bay K 8644", DeathText : ""},
+				];
+				var playerstatus = [];
+				var opponentstatus = [];
+				var playertextbuffer = "";
+				var opponenttextbuffer = "";
+				var playertext;
+				var opponenttext;
+				var player;
+				var opponent;
+				var playerstatustext;
+				var opponentstatustext;
+				var gamekeyboard;
+				var projectiles = [];
+				var playerhealtimer = 0;
+				var opponenthealtimer = 0;
+				var AItimer = 0;
+				var gameover = false;
+				var gameovertext = "";
+        function preload () {
+            game.load.image('avatardead', 'img/avatardead.png');
+						game.load.image('avatarnormal', 'img/avatarnormal.png');
+						game.load.image('avatarheal', 'img/avatarheal.png');
+						game.load.image('drugprojectile', 'img/drugprojectile.png');
+        }
+
+        function create () {
+						game.stage.backgroundColor = "#FFFFFF";
+						game.scale.pageAlignHorizontally = true;
+						game.scale.refresh();
+
+						player = game.add.sprite(0,50,'avatarnormal');
+						player.height = player.height * 0.5;
+						player.width = player.width * 0.5;
+						opponent = game.add.sprite(672,50,'avatarnormal');
+						opponent.height = opponent.height * 0.5;
+						opponent.width = opponent.width * 0.5;
+
+						playertext = game.add.text(0,0,"");
+						opponenttext = game.add.text(400,0,"");
+						game.add.text(0,306,"Your Status:");
+						game.add.text(400,306,"Opponent Status:");
+						playerstatustext = game.add.text(0,326,"");
+						opponentstatustext = game.add.text(400,326,"");
+						
+						game.input.keyboard.onDownCallback = function(e) {
+							if(e.keyCode == 13) {
+								for(var i = 0; i < playerstatus.length; i++) {
+									for(var j = 0; j < drugdatabase.length; j++) {
+										if(drugdatabase[j].Drug == playerstatus[i].Drug) {
+											var antidotes = drugdatabase[j].Antidotes.split(",");
+											for(k = 0; k < antidotes.length; k++) {
+												if(antidotes[k].toUpperCase() == playertextbuffer.toUpperCase()) {
+													playerstatus.splice(i,1);
+													player.loadTexture('avatarheal');
+													playerhealtimer = game.time.totalElapsedSeconds();
+													playertextbuffer = "";
+													return;
+												}
+											}
+										}
+									}
+								}
+								for(var i = 0; i < drugdatabase.length; i++) {
+									if(drugdatabase[i].Drug.toUpperCase() == playertextbuffer) {
+										var projectilesprite = game.add.sprite(64, 128, "drugprojectile");
+										projectiles.push({Drug : drugdatabase[i].Drug, Target : "Opponent", Sprite : projectilesprite});
+										break;
+									}
+								}
+								playertextbuffer = "";
+							}
+							else if(e.keyCode >= 65 && e.keyCode <=	90) playertextbuffer += String.fromCharCode(e.keyCode).toString();
+							else if(e.keyCode == 188) playertextbuffer += ",";
+							else if(e.keyCode == 173) playertextbuffer += "-";
+							else if(e.keyCode == 32) playertextbuffer += " ";
+							else if(e.keyCode == 8 && playertextbuffer.length > 0) playertextbuffer = playertextbuffer.substr(0, playertextbuffer.length-1);
+							else if(e.keyCode > 47 && e.keyCode < 58) playertextbuffer += String.fromCharCode(e.keyCode).toString();
+						};
+        }
+
+				function update() {
+					if(!gameover) {
+						if(game.time.totalElapsedSeconds() - AItimer > 5) {
+							if(opponentstatus.length > 0) opponentstatus.splice(0,1);
+							var randomdrug = drugdatabase[Math.floor(Math.random() * drugdatabase.length)].Drug;
+							var cured = false;
+							for(var i = 0; i < opponentstatus.length; i++) {
+								for(var j = 0; j < drugdatabase.length; j++) {
+									if(drugdatabase[j].Drug == opponentstatus[i].Drug) {
+										var antidotes = drugdatabase[j].Antidotes.split(",");
+										for(k = 0; k < antidotes.length; k++) {
+											if(antidotes[k].toUpperCase() == randomdrug.toUpperCase()) {
+												opponentstatus.splice(i,1);
+												opponent.loadTexture('avatarheal');
+												opponenthealtimer = game.time.totalElapsedSeconds();
+												cured = true;
+												AItimer = game.time.totalElapsedSeconds();
+												break;
+											}
+										}
+										if(cured) break;
+									}
+								}
+								if(cured) break;
+							}
+							if(!cured) {
+								var projectilesprite = game.add.sprite(672, 188, "drugprojectile");
+								projectilesprite.angle += 180;
+								projectiles.push({Drug : randomdrug, Target : "Player", Sprite : projectilesprite});
+								AItimer = game.time.totalElapsedSeconds();
+							}
+						}
+						playertext.setText(playertextbuffer);
+						if(game.time.totalElapsedSeconds() - playerhealtimer > 1 && playerhealtimer != 0) {
+							playerhealtimer = 0;
+							player.loadTexture('avatarnormal');
+						}
+						if(game.time.totalElapsedSeconds() - opponenthealtimer > 1 && opponenthealtimer != 0) {
+							opponenthealtimer = 0;
+							opponent.loadTexture('avatarnormal');
+						}
+						for(var i = 0; i < projectiles.length; i++) {
+							if(projectiles[i].Target == "Opponent") {
+								projectiles[i].Sprite.x += 4;
+								if(projectiles[i].Sprite.overlap(opponent)) {
+									var alreadyaffected = false;
+									for(var j = 0; j < opponentstatus.length; j++) {
+										if(opponentstatus[j].Drug == projectiles[i].Drug) {
+											alreadyaffected = true;
+											break;
+										}
+									}
+									if(!alreadyaffected) opponentstatus.push({Drug : projectiles[i].Drug, Time : game.time.totalElapsedSeconds()});
+									projectiles[i].Sprite.destroy();
+									projectiles.splice(i,1);
+									i--;
+								}
+							}
+							else {
+								projectiles[i].Sprite.x -= 4;
+								if(projectiles[i].Sprite.x - projectiles[i].Sprite.width < 128) {
+									var alreadyaffected = false;
+									for(var j = 0; j < playerstatus.length; j++) {
+										if(playerstatus[j].Drug == projectiles[i].Drug) {
+											alreadyaffected = true;
+											break;
+										}
+									}
+									if(!alreadyaffected) playerstatus.push({Drug : projectiles[i].Drug, Time : game.time.totalElapsedSeconds()});
+									projectiles[i].Sprite.destroy();
+									projectiles.splice(i,1);
+									i--;
+								}
+							}
+						}
+						var opptext = "";
+						for(var i = 0; i < opponentstatus.length; i++) {
+							if((10 - game.time.totalElapsedSeconds() + opponentstatus[i].Time) < 0) {
+								opponent.loadTexture('avatardead');
+								game.add.text(275,250, "You win");
+								gameover = true;
+							}
+							opptext += opponentstatus[i].Drug + " - " + parseInt(10 - game.time.totalElapsedSeconds() + opponentstatus[i].Time) + "s to death\n";
+						}
+						opponentstatustext.setText(opptext);
+						var tempplayertext = "";
+						for(var i = 0; i < playerstatus.length; i++) {
+							if((10 - game.time.totalElapsedSeconds() + playerstatus[i].Time) < 0) {
+								player.loadTexture('avatardead');
+								game.add.text(275,250, "You lose");
+								gameover = true;
+							}
+							tempplayertext += playerstatus[i].Drug + " - " + parseInt(10 - game.time.totalElapsedSeconds() + playerstatus[i].Time) + "s to death\n";
+						}
+						playerstatustext.setText(tempplayertext);
+					}
+					else {
+					}
+				}
+
+    };
+
+    </script>
+    </body>
+</html>
